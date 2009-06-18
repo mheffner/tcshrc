@@ -191,8 +191,10 @@ switch ( $TERM )
               alias sethead echo -n ""
               unalias cwdcmd
 endsw
-sethead ${SHORT_HOST} - ${PWD}
-seticon ${SHORT_HOST}
+
+# Disabled to allow overriding later
+#sethead ${SHORT_HOST} - ${PWD}
+#seticon ${SHORT_HOST}
 
 #### Generic command to set the title bar of the console window to
 #### show the hostname and current directory.
