@@ -8,11 +8,28 @@ set -l path = ( $path $HOME/bin )
 # Personal favorite
 set prompt="%m:%B%c03%b%# "
 
+# Lowercase the hostname
+setenv SHORT_HOST `echo $SHORT_HOST | tr 'A-Z' 'a-z'`
+
+# Fix terminal names
+switch ( $TERM )
+       case "rxvt*":
+	    alias   seticon  'printf "\033]1;%s*\007"'
+	    alias   sethead  'printf "\033]2;%s\007"'
+	    alias   cwdcmd   'sethead "${SHORT_HOST}:${PWD}"'
+endsw
+
+sethead ${SHORT_HOST}:${PWD}
+seticon ${SHORT_HOST}
+
 # Somehow ignore xterms?
 unset watch
 
 # Calm the auto-completing
 set correct=complete
+
+# Don't really care for history across sessions
+unset histfile
 
 # Take off the training wheels
 unalias rm
@@ -24,11 +41,15 @@ bindkey "^W" backward-delete-word
 bindkey -k up history-search-backward
 bindkey -k down history-search-forward
 
+# Big history
+set history=10240
 
 # Common mistake
 alias ls-al	ls -al
 
-setenv IRCNICK Fesnel
+setenv IRCNICK	   Fesnel
+setenv IRCNAME	   "Mike Heffner"
+setenv IRCSERVER   "irc.lightning.net"
 
 if (-X xemacs) then
 	setenv EDITOR xemacs
@@ -37,6 +58,15 @@ endif
 alias lcvs	cvs -d spock@hedwig:/cvs
 alias fbsdscvs	cvs -d mikeh@ncvs.freebsd.org:/home/ncvs
 alias fbsdpcvs	cvs -d mikeh@pcvs.freebsd.org:/home/pcvs
+
+alias svndiffls        'svn diff \!* | grep ^Index | cut -d " " -f 2'
+alias snv svn
+
+alias rpmqvendor 'rpm -qa --queryformat "%{NAME}-%{VENDOR}\n"'
+
+alias run-enscript 'enscript --media=Letter -GEc -fCourier7 -r -j -2 -v -C --lines-per-page=120 \!*'
+
+alias makeit   'make -s clean && make -s all && make -s install'
 
 setenv SVNROOT svn+ssh://svn.bburg.evergrid.com/opt/svn/cdc
 setenv NSVNROOT svn+ssh://nagini.fesnel.com/var/svn/mikeh
@@ -51,6 +81,7 @@ setenv FZLIB_HOME $HOME/tmp/fzlib/FZlib
 set -l path = ( $path $FLEX_HOME/bin )
 
 alias unrarit	'unrar x -y \!*'
+alias gr	'grep -Irn \!$ .'
 
 if ($HOST == "hedwig.fesnel.no-ip.org") then
 	alias ls ls --color=never
@@ -91,3 +122,13 @@ setenv LIBTOOLIZE  ${AUTODIR}/libtoolize${LTOOLVER}
 #setenv XGETTEXT	/usr/local/bin/xgettext
 
 setenv MOZ_PLUGIN_PATH	$HOME/.firefox/plugins
+
+limit coredumpsize 10000m
+
+setenv SVN_EDITOR      /home/mheffner/bin/svncitemp.sh
+setenv SVN_REAL_EDITOR $EDITOR
+
+# Source a private RC file if it exists
+if (-e $HOME/.tcshrc.priv) then
+	source $HOME/.tcshrc.priv
+endif
