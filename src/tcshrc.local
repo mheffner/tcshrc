@@ -1,11 +1,93 @@
-#############################################################################
-##
-## .tcshrc.local
-##
-## Author: Simos Xenitellis (simos.lists@googlemail.com)
-##
-## This is the .tcshrc.local file, part of the TCSHRC project
-## at http://tcshrc.sourceforge.net
-##
-## Here you add your aliases, sets, completions and bindkeys that you want
-## to override from the default settings.
+#
+# Personal tcshrc.local
+#
+
+# Add home/bin
+set -l path = ( $path $HOME/bin )
+
+# Personal favorite
+set prompt="%m:%B%c03%b%# "
+
+# Somehow ignore xterms?
+unset watch
+
+# Calm the auto-completing
+set correct=complete
+
+# Take off the training wheels
+unalias rm
+unalias cp
+unalias mv
+
+# Must have for history searching
+bindkey "^W" backward-delete-word
+bindkey -k up history-search-backward
+bindkey -k down history-search-forward
+
+
+# Common mistake
+alias ls-al	ls -al
+
+setenv IRCNICK Fesnel
+
+if (-X xemacs) then
+	setenv EDITOR xemacs
+endif
+
+alias lcvs	cvs -d spock@hedwig:/cvs
+alias fbsdscvs	cvs -d mikeh@ncvs.freebsd.org:/home/ncvs
+alias fbsdpcvs	cvs -d mikeh@pcvs.freebsd.org:/home/pcvs
+
+setenv SVNROOT svn+ssh://svn.bburg.evergrid.com/opt/svn/cdc
+setenv NSVNROOT svn+ssh://nagini.fesnel.com/var/svn/mikeh
+
+setenv FLEX3_HOME $HOME/tmp/flexsdk
+setenv FLEX4_HOME $HOME/tmp/flexsdk4
+
+setenv FLEX_HOME ${FLEX4_HOME}
+
+setenv FZLIB_HOME $HOME/tmp/fzlib/FZlib
+
+set -l path = ( $path $FLEX_HOME/bin )
+
+alias unrarit	'unrar x -y \!*'
+
+if ($HOST == "hedwig.fesnel.no-ip.org") then
+	alias ls ls --color=never
+	setenv AMAKEVER		""
+	setenv ACONFVER		""
+	setenv LTOOLVER		""
+	setenv AUTODIR		"/usr/bin"
+else if ($OSTYPE == "linux") then
+	alias ls ls --color=never
+	alias host hostx
+        setenv AMAKEVER    -1.9
+        setenv ACONFVER    -2.61
+        setenv LTOOLVER    
+        setenv AUTODIR     /usr/bin
+else if ($OSTYPE == "FreeBSD") then
+	alias openoffice openoffice-1.1
+	alias gv ghostview
+        setenv AMAKEVER    19
+        setenv ACONFVER    259
+        setenv LTOOLVER    
+        setenv AUTODIR     /usr/local/bin
+	setenv ACLOCAL_FLAGS	"-I /usr/local/share/aclocal"
+endif
+
+setenv AUTOCONF    ${AUTODIR}/autoconf${ACONFVER}
+setenv AUTOMAKE    ${AUTODIR}/automake${AMAKEVER}
+setenv AUTOHEADER  ${AUTODIR}/autoheader${ACONFVER}
+setenv ACLOCAL     ${AUTODIR}/aclocal${AMAKEVER}
+setenv AUTOM3TE    ${AUTODIR}/autom4te${ACONFVER}
+setenv AUTORECONF  ${AUTODIR}/autoreconf${ACONFVER}
+setenv AUTOSCAN    ${AUTODIR}/autoscan${ACONFVER}
+setenv AUTOUPDATE  ${AUTODIR}/autoupdate${ACONFVER}
+setenv LIBTOOL     ${AUTODIR}/libtool${LTOOLVER}
+setenv LIBTOOLIZE  ${AUTODIR}/libtoolize${LTOOLVER}
+
+#setenv MSGFMT	/usr/local/bin/msgfmt
+#setenv GMSGFMT	/usr/local/bin/msgfmt
+#setenv XGETTEXT	/usr/local/bin/xgettext
+
+setenv MOZ_PLUGIN_PATH	$HOME/.firefox/plugins
